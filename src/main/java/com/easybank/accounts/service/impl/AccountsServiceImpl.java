@@ -1,0 +1,83 @@
+package com.easybank.accounts.service.impl;
+
+import com.easybank.accounts.constants.AccountsConstants;
+import com.easybank.accounts.dto.AccountsDto;
+import com.easybank.accounts.dto.CustomerDto;
+import com.easybank.accounts.entities.Account;
+import com.easybank.accounts.entities.Customer;
+import com.easybank.accounts.exception.CustomerAlreadyExistsException;
+import com.easybank.accounts.exception.ResourceNotFoundException;
+import com.easybank.accounts.mapper.AccountsMapper;
+import com.easybank.accounts.mapper.CustomerMapper;
+import com.easybank.accounts.repository.AccountsRepository;
+import com.easybank.accounts.repository.CustomerRepository;
+import com.easybank.accounts.service.IAccountsService;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.Random;
+
+@Service
+@AllArgsConstructor
+public class AccountsServiceImpl implements IAccountsService {
+
+    private final AccountsRepository accountsRepository;
+
+    private final CustomerRepository customerRepository;
+
+    /**
+     * @param customerDto - CustomerDto Object
+     */
+    @Override
+    public void createAccount(CustomerDto customerDto) {
+
+        final Customer customer = CustomerMapper.mapToCustomer(customerDto, new Customer());
+        Optional<Customer> optionalCustomer = customerRepository.findByMobileNumber(customerDto.mobileNumber());
+
+        if (optionalCustomer.isPresent()) {
+            throw new CustomerAlreadyExistsException("Customer already registered with given mobileNumber " + customerDto.mobileNumber());
+        }
+
+        customer.setCreatedAt(LocalDateTime.now());
+        customer.setCreatedBy("Anonymous");
+        Customer savedCustomer = customerRepository.save(customer);
+        accountsRepository.save(createNewAccount(savedCustomer));
+
+    }
+
+    /**
+     * @param customer - Customer Object
+     * @return the new account details
+     */
+    private Account createNewAccount(Customer customer) {
+        Account account = new Account();
+        account.setCustomerId(customer.getCustomerId());
+        long randomAccNumber = 1000000000L + new Random().nextInt(900000000);
+
+        account.setAccountNumber(randomAccNumber);
+        account.setAccountType(AccountsConstants.SAVINGS);
+        account.setBranchAddress(AccountsConstants.ADDRESS);
+        account.setCreatedAt(LocalDateTime.now());
+        account.setCreatedBy("Anonymous");
+        return account;
+    }
+
+    /**
+     * @param mobileNumber - CustomerDto Object
+     * @return AccountDetails based on a given mobileNumber
+     */
+    @Override
+    public CustomerDto fetchAccount(String mobileNumber) {
+
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
+
+        Account account = accountsRepository.findByCustomerId(customer.getCustomerId())
+                .orElseThrow(() -> new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString()));
+        AccountsDto accountsDto = AccountsMapper.mapToAccountsDto(account);
+        return CustomerMapper.mapToCustomerDtoWithAccountDto(customer, accountsDto);
+    }
+
+}
