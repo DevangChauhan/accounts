@@ -34,10 +34,10 @@ public class AccountsServiceImpl implements IAccountsService {
     public void createAccount(CustomerDto customerDto) {
 
         final Customer customer = CustomerMapper.mapToCustomer(customerDto, new Customer());
-        Optional<Customer> optionalCustomer = customerRepository.findByMobileNumber(customerDto.mobileNumber());
+        Optional<Customer> optionalCustomer = customerRepository.findByMobileNumber(customerDto.getMobileNumber());
 
         if (optionalCustomer.isPresent()) {
-            throw new CustomerAlreadyExistsException("Customer already registered with given mobileNumber " + customerDto.mobileNumber());
+            throw new CustomerAlreadyExistsException("Customer already registered with given mobileNumber " + customerDto.getMobileNumber());
         }
 
         customer.setCreatedAt(LocalDateTime.now());
@@ -76,8 +76,9 @@ public class AccountsServiceImpl implements IAccountsService {
 
         Account account = accountsRepository.findByCustomerId(customer.getCustomerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString()));
-        AccountsDto accountsDto = AccountsMapper.mapToAccountsDto(account);
-        return CustomerMapper.mapToCustomerDtoWithAccountDto(customer, accountsDto);
+        CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
+        customerDto.setAccountsDto(AccountsMapper.mapToAccountsDto(account, new AccountsDto()));
+        return customerDto;
     }
 
     /**
@@ -87,10 +88,10 @@ public class AccountsServiceImpl implements IAccountsService {
     @Override
     public boolean updateAccount(CustomerDto customerDto) {
         boolean isUpdated = false;
-        AccountsDto accountsDto = customerDto.accountsDto();
+        AccountsDto accountsDto = customerDto.getAccountsDto();
         if (accountsDto != null) {
-            Account account = accountsRepository.findById(accountsDto.accountNumber()).orElseThrow(
-                    () -> new ResourceNotFoundException("Account", "AccountNumber", accountsDto.accountNumber().toString())
+            Account account = accountsRepository.findById(accountsDto.getAccountNumber()).orElseThrow(
+                    () -> new ResourceNotFoundException("Account", "AccountNumber", accountsDto.getAccountNumber().toString())
             );
 
             AccountsMapper.mapToAccounts(accountsDto, account);
@@ -122,7 +123,7 @@ public class AccountsServiceImpl implements IAccountsService {
         accountsRepository.deleteByCustomerId(customer.getCustomerId());
         customerRepository.deleteById(customer.getCustomerId());
 
-        return false;
+        return true;
     }
 
 

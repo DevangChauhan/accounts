@@ -4,15 +4,17 @@ import com.easybank.accounts.dto.AccountsDto;
 import com.easybank.accounts.entities.Account;
 
 public class AccountsMapper {
-
-    public static AccountsDto mapToAccountsDto(Account account) {
-        return new AccountsDto(account.getAccountNumber(), account.getAccountType(), account.getBranchAddress());
+    public static AccountsDto mapToAccountsDto(Account accounts, AccountsDto accountsDto) {
+        accountsDto.setAccountNumber(accounts.getAccountNumber());
+        accountsDto.setAccountType(accounts.getAccountType());
+        accountsDto.setBranchAddress(accounts.getBranchAddress());
+        return accountsDto;
     }
 
     public static Account mapToAccounts(AccountsDto accountsDto, Account accounts) {
-        accounts.setAccountNumber(accountsDto.accountNumber());
-        accounts.setAccountType(accountsDto.accountType());
-        accounts.setBranchAddress(accountsDto.branchAddress());
+        accounts.setAccountNumber(accountsDto.getAccountNumber());
+        accounts.setAccountType(accountsDto.getAccountType());
+        accounts.setBranchAddress(accountsDto.getBranchAddress());
         return accounts;
     }
 

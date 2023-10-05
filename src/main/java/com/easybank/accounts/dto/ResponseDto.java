@@ -1,4 +1,11 @@
 package com.easybank.accounts.dto;
 
-public record ResponseDto(String statusCode, String statusMsg) {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class ResponseDto {
+    private String statusCode;
+    private String statusMsg;
 }

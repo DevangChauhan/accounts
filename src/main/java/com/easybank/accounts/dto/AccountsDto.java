@@ -1,4 +1,10 @@
 package com.easybank.accounts.dto;
 
-public record AccountsDto(Long accountNumber, String accountType, String branchAddress) {
+import lombok.Data;
+
+@Data
+public class AccountsDto {
+    private Long accountNumber;
+    private String accountType;
+    private String branchAddress;
 }

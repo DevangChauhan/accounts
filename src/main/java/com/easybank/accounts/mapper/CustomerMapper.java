@@ -1,18 +1,22 @@
 package com.easybank.accounts.mapper;
 
-import com.easybank.accounts.dto.AccountsDto;
 import com.easybank.accounts.dto.CustomerDto;
 import com.easybank.accounts.entities.Customer;
 
 public class CustomerMapper {
 
+    public static CustomerDto mapToCustomerDto(Customer customer, CustomerDto customerDto) {
+        customerDto.setName(customer.getName());
+        customerDto.setEmail(customer.getEmail());
+        customerDto.setMobileNumber(customer.getMobileNumber());
+        return customerDto;
+    }
+
     public static Customer mapToCustomer(CustomerDto customerDto, Customer customer) {
-        customer.setName(customerDto.name());
-        customer.setEmail(customerDto.email());
-        customer.setMobileNumber(customerDto.mobileNumber());
+        customer.setName(customerDto.getName());
+        customer.setEmail(customerDto.getEmail());
+        customer.setMobileNumber(customerDto.getMobileNumber());
         return customer;
     }
-    public static CustomerDto mapToCustomerDtoWithAccountDto(Customer customer, AccountsDto accountsDto) {
-        return new CustomerDto(customer.getName(), customer.getEmail(), customer.getMobileNumber(), accountsDto);
-    }
+
 }
