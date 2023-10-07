@@ -3,7 +3,6 @@ package com.easybank.accounts.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.*;
 
 @Entity
@@ -12,8 +11,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "account")
-public class Account extends BaseEntity {
+public class Accounts extends BaseEntity {
 
     @Column(name = "customer_id")
     private Long customerId;
