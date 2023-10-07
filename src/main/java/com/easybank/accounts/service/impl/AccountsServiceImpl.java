@@ -3,7 +3,7 @@ package com.easybank.accounts.service.impl;
 import com.easybank.accounts.constants.AccountsConstants;
 import com.easybank.accounts.dto.AccountsDto;
 import com.easybank.accounts.dto.CustomerDto;
-import com.easybank.accounts.entities.Account;
+import com.easybank.accounts.entities.Accounts;
 import com.easybank.accounts.entities.Customer;
 import com.easybank.accounts.exception.CustomerAlreadyExistsException;
 import com.easybank.accounts.exception.ResourceNotFoundException;
@@ -48,8 +48,8 @@ public class AccountsServiceImpl implements IAccountsService {
      * @param customer - Customer Object
      * @return the new account details
      */
-    private Account createNewAccount(Customer customer) {
-        Account account = new Account();
+    private Accounts createNewAccount(Customer customer) {
+        Accounts account = new Accounts();
         account.setCustomerId(customer.getCustomerId());
         long randomAccNumber = 1000000000L + new Random().nextInt(900000000);
 
@@ -69,7 +69,7 @@ public class AccountsServiceImpl implements IAccountsService {
         Customer customer = customerRepository.findByMobileNumber(mobileNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
 
-        Account account = accountsRepository.findByCustomerId(customer.getCustomerId())
+        Accounts account = accountsRepository.findByCustomerId(customer.getCustomerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString()));
         CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
         customerDto.setAccountsDto(AccountsMapper.mapToAccountsDto(account, new AccountsDto()));
@@ -85,7 +85,7 @@ public class AccountsServiceImpl implements IAccountsService {
         boolean isUpdated = false;
         AccountsDto accountsDto = customerDto.getAccountsDto();
         if (accountsDto != null) {
-            Account account = accountsRepository.findById(accountsDto.getAccountNumber()).orElseThrow(
+            Accounts account = accountsRepository.findById(accountsDto.getAccountNumber()).orElseThrow(
                     () -> new ResourceNotFoundException("Account", "AccountNumber", accountsDto.getAccountNumber().toString())
             );
 
