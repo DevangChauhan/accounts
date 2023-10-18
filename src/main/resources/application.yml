@@ -17,3 +17,8 @@ spring:
   flyway:
     user: sa
     password: ''
+
+build:
+  version: "1.0"
+
+
