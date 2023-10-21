@@ -1,6 +1,7 @@
 package com.easybank.accounts.resource;
 
 import com.easybank.accounts.constants.AccountsConstants;
+import com.easybank.accounts.dto.AccountsContactInfoDto;
 import com.easybank.accounts.dto.CustomerDto;
 import com.easybank.accounts.dto.ErrorResponseDto;
 import com.easybank.accounts.dto.ResponseDto;
@@ -41,6 +42,9 @@ public class AccountsResource {
 
     @Autowired
     private Environment environment;
+
+    @Autowired
+    private AccountsContactInfoDto accountsContactInfoDto;
 
     @Operation(
             summary = "Create Account REST API",
@@ -214,6 +218,30 @@ public class AccountsResource {
     public ResponseEntity<String> getJavaVersion() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(environment.getProperty("JAVA_HOME"));
+    }
+
+    @Operation(
+            summary = "Get contact info",
+            description = "REST API to get contact info that is installed into account microservice"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
+    @GetMapping("contact-info")
+    public ResponseEntity<AccountsContactInfoDto> getContactInfo() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(accountsContactInfoDto);
     }
 
 }
