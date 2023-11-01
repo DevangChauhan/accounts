@@ -24,4 +24,12 @@ spring:
     user: sa
     password: ''
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
+
 
