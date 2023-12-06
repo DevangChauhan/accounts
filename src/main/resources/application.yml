@@ -63,5 +63,5 @@ info:
 logging:
   level:
     com:
-      devskillslearning:
+      easybank:
         accounts: DEBUG
