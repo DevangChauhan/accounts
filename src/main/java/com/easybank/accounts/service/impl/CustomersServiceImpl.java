@@ -18,6 +18,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 @AllArgsConstructor
 public class CustomersServiceImpl implements CustomersService {
@@ -28,8 +30,8 @@ public class CustomersServiceImpl implements CustomersService {
     private LoansFeignClient loansFeignClient;
 
     /**
-     * @param mobileNumber - Input Mobile Number
-     *  @param correlationId - Correlation ID value generated at Edge server
+     * @param mobileNumber  - Input Mobile Number
+     * @param correlationId - Correlation ID value generated at Edge server
      * @return Customer Details based on a given mobileNumber
      */
     @Override
@@ -45,10 +47,15 @@ public class CustomersServiceImpl implements CustomersService {
         customerDetailsDto.setAccountsDto(AccountsMapper.mapToAccountsDto(accounts, new AccountsDto()));
 
         ResponseEntity<LoansDto> loansDtoResponseEntity = loansFeignClient.fetchLoanDetails(correlationId, mobileNumber);
-        customerDetailsDto.setLoansDto(loansDtoResponseEntity.getBody());
+        if (Objects.nonNull(loansDtoResponseEntity)) {
+            customerDetailsDto.setLoansDto(loansDtoResponseEntity.getBody());
+        }
+
 
         ResponseEntity<CardsDto> cardsDtoResponseEntity = cardsFeignClient.fetchCardDetails(correlationId, mobileNumber);
-        customerDetailsDto.setCardsDto(cardsDtoResponseEntity.getBody());
+        if (Objects.nonNull(cardsDtoResponseEntity)) {
+            customerDetailsDto.setCardsDto(cardsDtoResponseEntity.getBody());
+        }
 
         return customerDetailsDto;
 
