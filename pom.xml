@@ -126,7 +126,7 @@
                 <version>3.3.2</version>
                 <configuration>
                     <to>
-                        <image>devskillslearning/${project.artifactId}:v6.0</image>
+                        <image>devskillslearning/${project.artifactId}:v7.0</image>
                     </to>
                 </configuration>
             </plugin>
