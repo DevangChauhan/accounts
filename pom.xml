@@ -134,7 +134,7 @@
                 <version>3.3.2</version>
                 <configuration>
                     <to>
-                        <image>devskillslearning/${project.artifactId}:v9.0</image>
+                        <image>devskillslearning/${project.artifactId}:v8.0</image>
                     </to>
                 </configuration>
             </plugin>
