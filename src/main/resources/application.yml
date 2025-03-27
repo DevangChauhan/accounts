@@ -1,3 +1,5 @@
+app:
+  version: ${build.version}
 server:
   port: 8080
 spring:
