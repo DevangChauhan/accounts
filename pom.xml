@@ -108,6 +108,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <skip>false</skip>
                     <image>
                         <name>devskillslearning/${project.artifactId}:${project.version}</name>
                     </image>
